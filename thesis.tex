@@ -1,0 +1,185 @@
+%% thesis.tex 2014/04/11
+%
+% Based on sample files of unknown authorship.
+%
+% The Current Maintainer of this work is Paul Vojta.
+
+\documentclass{ucbthesis}
+\usepackage[maxbibnames=99]{biblatex}
+\usepackage{rotating} % provides sidewaystable and sidewaysfigure
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage[backend=biber, bibencoding=utf8, style=authoryear]{biblatex}
+%\usepackage{biblatex}
+\usepackage[utf8]{inputenc}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{subcaption}
+
+\usepackage[dvipsnames]{xcolor}
+
+% Colored hyperlinks
+\usepackage[linktocpage]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=RoyalBlue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+% To compile this file, run "latex thesis", then "biber thesis"
+% (or "bibtex thesis", if the output from latex asks for that instead),
+% and then "latex thesis" (without the quotes in each case).
+
+% Double spacing, if you want it.  Do not use for the final copy.
+% \def\dsp{\def\baselinestretch{2.0}\large\normalsize}
+% \dsp
+
+% If the Grad. Division insists that the first paragraph of a section
+% be indented (like the others), then include this line:
+% \usepackage{indentfirst}
+
+\addtolength{\abovecaptionskip}{\baselineskip}
+
+% \newtheorem{theorem}{Jibberish}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{problem}{Problem}[section]
+\newtheorem{constraint}{Constraint}
+
+\bibliography{references}
+
+\hyphenation{mar-gin-al-ia}
+\hyphenation{bra-va-do}
+
+% Titles in bibliography should be in sentence format. Next 2 commands.
+% (See https://tex.stackexchange.com/questions/22980/sentence-case-for-titles-in-biblatex.)
+\DeclareFieldFormat{sentencecase}{\MakeSentenceCase*{#1}}\renewbibmacro*{title}{%
+  \ifthenelse{\iffieldundef{title}\AND\iffieldundef{subtitle}}{}
+  {\ifthenelse{\ifentrytype{article}\OR\ifentrytype{inbook}%
+    \OR\ifentrytype{incollection}\OR\ifentrytype{inproceedings}%
+    \OR\ifentrytype{inreference}\OR\ifentrytype{thesis}}
+    {\printtext[title]{%
+      \printfield[sentencecase]{title}%
+      \setunit{\subtitlepunct}%
+      \printfield[sentencecase]{subtitle}}}%
+    {\printtext[title]{%
+     \printfield[titlecase]{title}%
+     \setunit{\subtitlepunct}%
+     \printfield[titlecase]{subtitle}}}%
+     \newunit}%
+  \printfield{titleaddon}}
+
+\renewcommand{\afterpartskip}{\vfil} % allows placing text on part page
+
+\setcounter{secnumdepth}{3}
+
+
+\begin{document}
+
+% Declarations for Front Matter
+
+\title{Measuring the Harms of Personalization\\ through Advertising}
+\author{Muhammad Ali}
+\degreesemester{Fall}
+\degreeyear{2023}
+\degree{Doctor of Philosophy}
+\chair{Prof. Alan Mislove}
+\othermembers{Prof. Christo Wilson \\ 
+  Prof. Saiph Savage \\
+  Dr. Piotr Sapiezynski \\
+  Prof. Elissa M. Redmiles}
+% For a co-chair who is subordinate to the \chair listed above
+% \cochair{Professor Benedict Francis Pope}
+% For two co-chairs of equal standing (do not use \chair with this one)
+% \cochairs{Professor Richard Francis Sony}{Professor Benedict Francis Pope}
+\numberofmembers{5}
+% Previous degrees are no longer to be listed on the title page.
+% \prevdegrees{B.A. (University of Northern South Dakota at Hoople) 1978 \\
+%   M.S. (Ed's School of Quantum Mechanics and Muffler Repair) 1989}
+\field{Computer Science}
+% Designated Emphasis -- this is optional, and rare
+% \emphasis{Colloidal Telemetry}
+% This is optional, and rare
+% \jointinstitution{University of Western Maryland}
+% This is optional (default is Berkeley)
+% \campus{Berkeley}
+
+% For a masters thesis, replace the above \documentclass line with
+% \documentclass[masters]{ucbthesis}
+% This affects the title and approval pages, which by default calls this
+% document a "dissertation", not a "thesis".
+
+\maketitle
+% Delete (or comment out) the \approvalpage line for the final version.
+% \approvalpage
+% \copyrightpage
+
+\include{abstract}
+
+\begin{frontmatter}
+
+% \begin{dedication}
+% \null\vfil
+% \begin{center}
+% To Ossie Bernosky\\\vspace{12pt}
+% And exposition? Of go. No upstairs do fingering. Or obstructive, or purposeful.
+% In the glitter. For so talented. Which is confines cocoa accomplished.
+% Masterpiece as devoted. My primal the narcotic. For cine? To by recollection
+% bleeding. That calf are infant. In clause. Be a popularly. A as midnight
+% transcript alike. Washable an acre. To canned, silence in foreign.
+% \end{center}
+% \vfil\null
+% \end{dedication}
+
+% You can delete the \clearpage lines if you don't want these to start on
+% separate pages.
+
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+% \clearpage
+% \listofsymbols
+
+\begin{acknowledgements}
+I have many people to thank.
+\end{acknowledgements}
+
+\end{frontmatter}
+
+\pagestyle{headings}
+
+\part{Introduction and Background}
+\label{par:intro}
+% \include{chap1_intro}
+% \include{chap2_background}
+
+\part{Grasp Pose Detection}
+\label{par:algorithms}
+% \include{chap3_handles}
+% \include{chap4_svm}
+% \include{chap5_cnn}
+% \include{chap6_cnn_candidates}
+
+\part{Applications}
+\label{par:applications}
+% \include{chap7}
+% \include{chap8}
+
+\part{Conclusion}
+\label{par:conclusion}
+\include{chap9}
+
+\printbibliography
+
+%\appendix
+% \chapter{The Special Euclidean Group}
+% \chapter{Depth Sensors and Point Clouds}
+%\chapter{XYZ}
+
+\end{document}
