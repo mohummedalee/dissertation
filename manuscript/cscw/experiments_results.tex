@@ -1,0 +1,419 @@
+% % =================== Experiments =================
+% \subsection{Experiments and Results}\label{sec:analysis}
+% In this section, we explore how an advertiser's choice of ad creative (headline, text, and image) and ad campaign settings (bidding strategy, targeted audience) can affect the demographics (gender and race) of the users to whom the ad is ultimately delivered. 
+
+% \subsubsection{Budget effects on ad delivery}\label{sec:market}
+% We begin by examining the impact that market effects can have on delivery, aiming to test the hypothesis put forth by Lambrecht \etal~\cite{lambrecht-2018-algorithmic}.
+% %
+% In particular, they observed that their ads were predominantly shown to men even though women had consistently higher click through rates (CTRs).
+% %
+% They then hypothesized that the higher CTRs led to women being more expensive to advertise to, meaning they were more likely to lose auctions for women when compared to auctions for men.
+
+% We test this hypothesis by running the same ad campaign with different budgets; our goal is to measure the effect that the daily budget alone has on the makeup of users who see the ads.
+% %
+% When running these experiments, we keep the ad creative and targeted audience constant, only changing the bidding strategy to give Facebook different daily limits (thus, any ad delivery differences can be attributed to the budget alone). 
+% %
+% We run an ad with daily budget limits of \$1, \$2, \$5, \$10, \$20, and \$50, and run multiple instances at each budget limit for statistical confidence.
+% %
+% Finally, we run the experiment twice, once targeting our random phone number custom audiences, and once targeting all users located in U.S.; we do so to verify that any effect we see is not a function of our particular target audience, and that it persists also when non-custom audiences are targeted.
+
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=.8\linewidth]{figures/budget-final.pdf}
+% 	\caption{Gender distributions of the audience depend on the daily budget of an ad, with higher budgets leading to a higher fraction of women.  The left graph shows an experiment where we target all users located in the U.S.; the right graph shows an experiment where we target our random phone number custom audiences.}
+% 	\label{fig:budget}
+% \end{figure}
+
+% Figure~\ref{fig:budget} presents the results, plotting the daily budget we specify versus the resulting fraction of men in the audience.
+% %
+% The left graph shows the results when we target all users located in the U.S., and the right graph shows the results when we target the random phone number custom audiences.
+% %
+% In both cases, we observe that changes in ad delivery due to differences in budget are indeed happening: the higher the daily budget, the smaller the fraction of men in the audience, with the Pearson's correlation of $\rho=-0.88$, $p_{val}<10^{-5}$ for all U.S. users and $\rho=-0.73$, $p_{val}<10^{-3}$ for the custom audiences.
+
+% %
+% The stronger effect we see when targeting all U.S. users may be due to the additional freedom that the ad delivery system has when choosing who to deliver to, as this is a significantly larger audience.
+% %
+% %Using the same experiments, we also plot the distribution of age ranges for users who were delivered our ad in the bottom graph of Figure~\ref{fig:budget}.  
+% %
+% %Again, we observe differences in ad delivery due to the budget alone: as we spend more per day, we tend to get a higher fraction of younger users (who may be more expensive as they are more sought-after by advertisers).
+
+% To eliminate the impact that market effects can have on delivery in our following experiments, we ensure that all runs of a given experiment use the same bidding strategy and budget limit. Typically we use a daily budget of \$20 per campaign.
+
+% \subsubsection{Ad creative effects on ad delivery}
+% Now we examine the effect that the ad creative (headline, text, and image) can have on ad delivery.
+% %
+% To do so, we create two stereotypical ads that we believe would appeal primarily to men and women, respectively: one ad focusing on \textit{bodybuilding} and another on \textit{cosmetics}.
+% %
+% The actual ads themselves are shown in Figure~\ref{fig:screenshot-bodybuilding}.
+% %
+% We run each of the ads at the same time and with the same bidding strategy and budget. 
+% %
+% For each variable we target different custom audiences, \ie the ``base'' level ads target one audience, ``text'' level ads target another, etc.
+% %We run five instances of each pair of ads in parallel, targeting different custom audiences, to ensure each of our ads is competing against exactly one other of our ads (i.
+% %
+% \textit{Note that we do not explicitly target either ad based on gender; the only targeting restrictions we stipulate are 18+ year old users in the U.S.}
+
+% We observe dramatic differences in ad delivery, even though the bidding strategy is the same for all ads, and each pair of ads target the same gender-agnostic audience.
+% %
+% In particular, the bodybuilding ad ended up being delivered to over 75\% men on average, while the cosmetics ad ended up being delivered to over 90\% women on average.
+% %
+% Again, this skewed delivery is despite the fact that we---the advertiser---did not specify difference in budget or target audience.
+
+% \para{Individual components' impact on ad delivery}
+% With the knowledge that the ad creative can skew delivery, we dig deeper to determine {\em which} of the components of the ad creative (headline, text, and image) have the greatest effect on ad delivery.
+% %
+% To do so, we stick with the bodybuilding and cosmetics ads, and ``turn off'' various features of the ad creative by replacing them with empty strings or blank images.
+% %
+% For example, the bodybuilding experiment listed as ``base'' includes an empty headline, empty ad text, and a blank white image; it does however link to the domain {\tt bodybuilding.com}.
+% %
+% Similarly, the cosmetics experiment listed as ``base'' includes no headline, text, or image, but does link to the domain {\tt elle.com}.
+% %
+% We then add back various parts of the ad creative, as shown in Figure~\ref{fig:screenshot-bodybuilding}.
+
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=.8\linewidth]{figures/initial-classification.pdf}
+% 	\caption{``Base'' ad contains a link to a page about either bodybuilding or cosmetics, a blank image, no text, or headline. 
+% 	There is a small difference in the fraction of male users for the base ads, and adding the ``text'' only decreases it.
+% 	Setting the ``headline'' sets the two ads apart but the audience of each is still not significantly different than that of the base version.
+% 	Finally, setting the ad ``image'' causes drastic changes: the bodybuilding ad is shown to a 91\% male audience, the cosmetics ad is shown to a 5\% male audience, despite the same target audience.}
+% 	\label{fig:classification-factors}
+% \end{figure}
+
+% The results of this experiment are presented in Figure~\ref{fig:classification-factors}.
+% %
+% Error bars in the figure correspond to 99\% confidence intervals as defined in Equation~\ref{eq:single_99}.
+% %
+% All results are shown relative to that experiment's ``base'' ad containing only the destination URL.
+% %
+% We make a number of observations.
+% %
+% {\em First}, we can observe an ad delivery difference due to the destination URL itself; the base bodybuilding ad delivers to 48\% men, while the base cosmetics ad delivers to 40\% men.
+% %
+% {\em Second}, as we add back the title and the headline, the ad delivery does not appreciably change from the baseline. 
+% %
+% However, once we introduce the image into the ad, the delivery changes dramatically, returning to the level of skewed delivery discussed above (over 75\% male for bodybuilding, and over 90\% female for cosmetics).
+% %
+% When we add the text and/or the headline back alongside the image, the skew of delivery does not change significantly compared to the presence of image only. 
+% %
+% Overall, our results demonstrate that the choice of ad image can have a dramatic effect on which users in the audience ultimately are shown the ad.
+
+% \parab{Swapping images} 
+% To further explore how the choice of image impacts ad delivery, we continue using the bodybuilding and cosmetics ads, and test how ads with incongruent images and text are delivered.
+% %
+% Specifically, we swap the images between the two ads, running an ad with the bodybuilding headline, text, and destination link, but with the image from cosmetics (and vice versa).
+% %
+% We also run the original ads (with congruent images and text) for comparison.  
+
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=.8\linewidth]{figures/initial-switch.pdf}
+% 	\caption{Ad delivery of original bodybuilding and cosmetics ads, as well as the same ads with incongruent images. Skew in delivery is observed from the beginning. Using incongruent images skews the delivery to a lesser degree, indicating that the image is not the only element of the ad that drives the skew in delivery.}
+% 	\label{fig:image-switch}
+% \end{figure}
+
+% The results of this experiment are presented in Figure~\ref{fig:image-switch}, showing the skew in delivery of the ads over time.
+% %
+% The color of the lines indicates the image that is shown in the ad; 
+% solid lines represent the delivery of ads with images consistent with the description, while dotted lines show the delivery for ads where image was replaced.
+% %
+% We make a number of observations.
+% %
+% {\em First}, when using congruent ad text and image (solid lines), we observe the skew we observed before.
+% %
+% However, we can now see clearly that this delivery skew appears to exist from the very beginning of the ad delivery, \ie before users begin viewing and interacting with our ads. We will explore this further in the following section.
+% %
+% {\em Second}, we see that when we switch the images---resulting in incongruent ads (dotted lines)---the skew still exists but to a lesser degree.
+% %
+% Notably, we observe that the ad with an image of bodybuilding but cosmetics text delivers closest to 50:50 across genders, but the ad with the image of cosmetics but bodybuilding text does not.
+% %
+% The exact mechanism by which Facebook decides to use the ad text and images in influencing ad delivery is unknown, and we leave a full exploration to future work.
+
+
+% \parab{Swapping images mid-experiment} 
+% Facebook allows advertisers to change their ad while it is running, for example, to update the image or text.
+% %
+% As a final point of analysis, we examine how changing the ad creative mid-experiment---after it has started running---affects ad delivery.
+% %
+% To do so, we begin the experiment with the original congruent bodybuilding and cosmetics ads; we let these run for over six hours.
+% %
+% We then swap the images on the running ads, thereby making the ads incongruent, and examine how ad delivery changes.
+
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=.5\linewidth]{figures/image-flip.pdf}
+% 	\caption{When we flip the image in the middle of the campaign, the ad is reclassified and shown to an updated audience. 
+% 	Here, we start bodybuilding and cosmetics ads with corresponding descriptions and after 6 hours and 32 minutes we flip the images. 
+% 	Within an hour of the change, the gender proportions are reversed, while there is no significant difference between the click through rates per gender pre and post flipping of the images.}
+% 	\label{fig:image-flip}
+% \end{figure}
+
+% Figure~\ref{fig:image-flip} presents the results of this experiment.
+% %
+% In the top graph, we show the instantaneous ad delivery skew: as expected, the congruent ads start to deliver in a skewed manner as we have previously seen.
+% %
+% After the image swap at six hours, we notice a very rapid change in delivery with the ads almost completely flipping in ad delivery skew in a short period of time.
+% %
+% Interestingly, we do not observe a significant change in users' behavior to explain this swap: the bottom graph plots the click through rates (CTRs) for both ads by men and women over time. 
+% %
+% Thus, our results suggest that the change in ad delivery skew is unlikely to be due to the users' responses to the ads.
+
+% \subsubsection{Source of ad delivery skew}
+% We just observed that ads see a significant skew in ad delivery due to the contents of the ad, despite the bidding strategy and targeting parameters being held constant.
+% %
+% However, we observed that the ad delivery skew was present from the very beginning of ad delivery, and that swapping the image in the middle of a run resulted in a very rapid change in ad delivery that could not be explained by how frequently users click on our ads.
+% % 
+% We now turn to explore the mechanism that may be leading to this ad delivery skew.
+
+% \para{Almost-transparent images}
+% We begin with the hypothesis that Facebook itself is automatically classifying the ad creative (including the image), and using the output of this classification to calculate a predicted relevance score to users.
+% %
+% In other words, we hypothesize that Facebook is running automatic text and image classification, rather than (say) relying on the ad's initial performance, which would explain (a) the delivery skew being present from the beginning of ad delivery, and (b) how the delivery changes rapidly despite no significant observable change in user behavior.
+% %
+% However, validating this hypothesis is tricky, as we are not privy to all of Facebook's ad performance data.
+
+% To test this hypothesis, we take an alternate approach.
+% %
+% We use the {\em alpha channel} that is present in many modern image formats; this is an additional channel that allows the image to encode the {\em transparency} of each pixel.
+% %
+% Thus, if we take an image and add an alpha channel with (say) 99\% opacity, all of the image data will still be present in the image, but any human who views the image would not be able to see it (as the image would show almost completely transparent).
+% %
+% However, if an automatic classifier exists, and if that classifier is not properly programmed to handle the alpha channel, it may continue to classify the image.
+
+% \newcommand{\img}[1]{\includegraphics[width=0.18\linewidth,height=0.18\linewidth]{figures/automation/#1}}
+% \newcommand{\imgno}[1]{\parbox[b][0.18\linewidth][c]{0.47cm}{~~~~#1}}
+% \begin{table}
+% \centering
+% \small
+% % \resizebox{.6\linewidth}{!}{
+% \begin{tabular}{c|cc|cc}
+%      & \multicolumn{2}{c|}{\bf Masculine} &  \multicolumn{2}{c}{\bf Feminine} \\
+%     {\bf No.} & {\bf Visible} & {\bf Invisible} & {\bf Visible} & {\bf Invisible} \\
+%     \hline
+%     \imgno{1} & \img{m1-a.jpg} & \img{m1-a-2-flat.jpg} & \img{f1-a.jpg} & \img{f1-a-2-flat.jpg} \\
+%     \imgno{2} & \img{m2-a.jpg} & \img{m2-a-2-flat.jpg} & \img{f2-a.jpg} & \img{f2-a-2-flat.jpg} \\
+%     \imgno{3} & \img{m3-a.jpg} & \img{m3-a-2-flat.jpg} & \img{f3-a.jpg} & \img{f3-a-2-flat.jpg} \\
+%     \imgno{4} & \img{m4-a.jpg} & \img{m4-a-2-flat.jpg} & \img{f4-a.jpg} & \img{f4-a-2-flat.jpg} \\
+%     \imgno{5} & \img{m5-a.jpg} & \img{m5-a-2-flat.jpg} & \img{f5-a.jpg} & \img{f5-a-2-flat.jpg} \\
+% \end{tabular}
+% % }
+% \caption{Diagram of the images used in the transparency experiments.  Shown are the five stereotypical masculine and feminine images, along with the same images with a 98\% alpha channel, denoted as invisible.  The images with the alpha channel are almost invisible to humans, but are still delivered in a skewed manner.}\label{tab:images}
+% \end{table}
+
+% \parab{Test images}
+% To test our hypothesis, we select five images that would stereotypically be of interest to men and five images that would stereotypically be of interest to women; these are shown in the second and fourth columns of Table~\ref{tab:images}.\footnote{All of these images were cropped from images posted to {\tt pexels.com}, which allow free non-commercial use.}$^,$\footnote{We cropped these images to the Facebook-recommended resolution of 1,080$\times$1,080 pixels to reduce the probability Facebook would resample the image.}
+% %
+% We convert them to PNG format add an alpha channel with 98\% opacity\footnote{We were unable to use 100\% transparency as we found that Facebook would run an image hash over the uploaded images and would detect different images with 100\% opacity to be the same (and would refuse to upload it again).  By using 98\% transparency, we ensure that the images were still almost invisible to humans but that Facebook would not detect they were the same image.} to each of these images; these are shown in the third and fifth columns of Table~\ref{tab:images}.
+% %
+% Because we cannot render a transparent image without a background, the versions in the paper are rendered on top of a white background.
+% %
+% As the reader can see, these images are not discernible to the human eye.
+
+% We first ran a series of tests to observe how Facebook's ad creation phase handled us uploading such transparent images.
+% %
+% If we used Reach as our ad objective, we found that Facebook ``flattened'' these images onto a white background in the ad preview.\footnote{Interestingly, we found that if we instead used Traffic as our ad objective, Facebook would both ``flatten'' these images onto a white background {\em and then normalize the contrast}.  This caused the ads to be visible to humans---simply with less detail that the original ads---thus defeating the experiment.  We are unsure of why Facebook did not choose to normalize images with the objective for Reach.}
+% %
+% By targeting ourselves with these Reach ads, we verified that when they were shown to users on the Facebook mobile app or in the desktop Facebook web feed, the images did indeed show up as white squares.
+% %
+% Thus, we can use this methodology to test whether there is an automatic image classifier present by examining whether running different transparent white ads results in different delivery.
+
+% \para{Results}
+% We run ads with all twenty of the images in Table~\ref{tab:images}, alongside ads with five truly blank white images for comparison.
+% %
+% For all 25 of these ads, we hold the ad headline, text, and destination link constant, run them all at the same time, and use the same bidding strategy and target custom audiences in a way that each user is potentially exposed to up to three ads (one masculine image, one feminine image, and one blank image).
+% %
+% We then record the differences in ad delivery of these 25 images along gender lines.
+% %
+% The results are presented in Figure~\ref{fig:image-transparency}A, with all five images in each of the five groups aggregated together.
+% %
+% We can observe that ad delivery is, in fact, skewed, with the ads with stereotypically masculine images delivering to over 43\% men and the ads with feminine images delivering to 39\% men in the experiment targeting custom audiences as well as 58\% and 44\% respectively in the experiment targeting all U.S. users.
+% %
+% Error bars in the plot correspond to the 99\% confidence interval calculated using Equation~\ref{eq:single_99}.
+% %
+
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=.8\linewidth]{figures/fig-alpha.pdf}
+% 	\caption{Fraction of reached men in the audiences for ads with the images from Table~\ref{tab:images}, targeting random phone number custom audience (A) and US audience (B). The solid markers are visible images, and the hollow markers are the same images with 98\% opacity. Also shown is the delivery to truly white images (``blank'').  We can observe that a difference in ad delivery exists, and that that difference is statistically significant between the masculine and feminine invisible images. This suggests that automated image classification is taking place.}
+% 	\label{fig:image-transparency}
+% \end{figure}
+
+% Interestingly, we also observe that the masculine invisible ads appear to be indistinguishable in the gender breakdown of their delivery from the masculine visible ads, and the feminine invisible ads appear to be indistinguishable in their delivery from the feminine visible ads.
+% %
+
+% \if 0
+% To examine whether this difference is statistically significant, we perform the two populations proportion test with the null hypothesis that the prevalence of men in the delivery audiences of these ads is indistinguishable.
+% %
+% It is equivalent to comparing the overlap in confidence intervals: if the intervals overlap, the two proportions are not significantly different.
+
+
+
+% , as described in Equation~\ref{eq:zscore}:
+% \begin{equation}
+% Z = \frac{(\hat{p_1}-\hat{p_2})-0}{\sqrt{\hat{p}(1-\hat{p})(\frac{1}{n_1}+\frac{1}{n_2})}}
+% \label{eq:zscore}
+% \end{equation}
+% where $\hat{p_1},\hat{p_2}$ are the fractions of men in the two audiences that we compare, $n_1,n_2$ are sizes of these audiences, and $\hat{p}$ is the fraction of men in the two delivery audiences combined.
+% %
+% The $Z$ value of $1.96$ corresponds to $p_{val}$ of $0.05$: if the absolute value of the test statistic is higher, we reject the null hypothesis.
+% \fi
+% %
+% As shown in Figure~\ref{fig:image-transparency}A, we verify that the fraction of men in the delivery of the male ads is significantly higher than in female-centered and neutral ads, as well as higher in neutral ads than in female-centered ads.
+% %
+% We also show that we cannot reject the null hypothesis that the fraction of men in the two versions of each ad (one visible, one invisible) are the same. 
+% %
+% Thus, we can conclude that the difference in ad delivery of our invisible male and female images is statistically significant, despite the fact that humans would not be able to perceive any differences in these ads.
+% %
+% This strongly suggests that our hypothesis is correct: that Facebook has an automated image classification mechanism in place that is used to steer different ads towards different subsets of the user population.\footnote{It is important to note we not know exactly how the classification works.  For example, the classifier may also be programmed to take in the ``flattened'' images that appear almost white, but there may sufficient data present in the images for the classification to work.  We leave a full exploration of how exactly the classifier is implemented to future work.}
+
+% To confirm this finding, we re-run the same experiment except that we change the target audience from our random phone number custom audiences (hundreds of thousands of users) to all U.S. users (over 320 million users).
+% %
+% Our theory is that if we give Facebook's algorithm a larger set of auctions to compete in, any effect of skewed delivery would be amplified as they may be able to find more users for whom the ad is highly ``relevant''.
+% %
+% In Figure~\ref{fig:image-transparency}B we observe that the ad delivery differences are, indeed, even greater: the male visible and invisible images deliver to approximately 60\% men, while the female visible and invisible images deliver to approximately 45\% men.
+% %
+% Moreover, the statistical significance of this experiment is even stronger, with a $Z$ value over 10 for the ad delivery difference between the male invisible and female invisible ads.
+
+
+
+% \subsubsection{Impact on real ads}
+% We have observed that differences in the ad headline, text, and image can lead to dramatic difference in ad delivery, despite the bidding strategy and target audience of the advertiser remaining the same.
+% %
+% However, all of our experiments thus far were on test ads where we typically changed only a single variable.
+% %
+% We now turn to examine the impact that ad delivery can have on realistic ads, where all properties of the ad creative can vary.
+
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=.8\linewidth]{figures/race-image-experiment.pdf}
+% 	\caption{We run three campaigns about the best selling albums. \textit{Top 30} is neutral, targeting all. \textit{Country} implicitly targets white users, and \textit{Hip-hop} implicitly targets Black users. Facebook classification picks up on the implicit targeting and shows it to the audience we would expect.}
+% 	\label{fig:image-race}
+% \end{figure}
+
+% \para{Entertainment ads}
+% We begin by constructing a series of benign entertainment ads that, while holding targeting parameters fixed (targeting custom audience $C$ from Table~\ref{stats:race}, are stereotypically of interest to different races.
+% %
+% Namely, we run three ads leading to lists of best albums in the previous year: general top 30 (neutral), top country music (stereotypically of interest mostly to white users), and top hip-hop albums (stereotypically of interest mostly to Black users).
+% %
+% We find that Facebook ad delivery follows the stereotypical distribution, despite all ads being targeted in the same manner and using the same bidding strategy.
+% %
+% Figure~\ref{fig:image-race} shows the fraction of white users in the audience in the three different ads, treating race as a binary (Black users constitute the remaining fraction).
+% %
+% Error bars represent 99\% confidence intervals calculated using Equation~\ref{eq:single_99}.
+
+% Neutral ads are seen by a relatively balanced, 45\% white audience, while the audiences receiving the country and hip-hop ads are 80\% and 13\% white, respectively.
+% %
+% Assuming significant population level differences of preferences, it can be argued that this experiment highlights the ``relevance'' measures embedded in ad delivery working as intended.
+% %
+% Next, we investigate cases where such differences may not be desired.
+
+% \begin{figure}
+% 	\centering
+% 	\includegraphics[width=.6 \linewidth]{figures/stock-jobs-small.pdf}
+% 	\caption{Results for employment ads, showing a breakdown of ad delivery by gender (left figure) and race (right figure) in the ultimate delivery audience.  The labels refer to the race/gender of the person in the ad image (if any).  The jobs themselves are ordered by the average fraction of men or white users in the audience.  Despite the same bidding strategy, the same target audience, and being run at the same time, we observe significant skew along on both racial and gender lines due to the content of the ad alone.}
+% 	\label{fig:image-job-race}
+% \end{figure}
+
+
+% \para{Employment ads}
+% Next, we advertise eleven different generic job types: artificial intelligence developer, doctor, janitor, lawyer, lumberjack, nurse, preschool teacher, restaurant cashier, secretary, supermarket clerk, and taxi driver.
+% %
+% For each ad, we customize the text, headline, and image as a real employment ad would.
+% %
+% For example, we advertise for taxi drivers with the text ``Begin your career as a taxi driver or a chauffeur and get people to places on time.''
+% %
+% For each ad, we link users to the appropriate category of job listings on a real-world job site.
+
+% When selecting the ad image for each job type, we select five different stock photo images: one that has a white male, one that has a white female, one that has a black male, one that has a black female, and one that is appropriate for the job type but has no people in it.
+% %
+% We run each of these five independently to test a representative set of ads for each job type, looking to see how they are delivered along gender and racial lines (targeting custom audience $C$ from Table~\ref{stats:race}).
+% %
+% %Thus, the target audiences that we use for these experiments are the North Carolina audiences described in Section~\ref{subsec:race-audiences}.
+% %
+% We run these ads for 24 hours, using the objective of Traffic, all targeting the same audience with the same bidding strategy.
+
+% The results of this experiment are presented in Figure~\ref{fig:image-job-race}, plotting the distribution of each of our ads along gender (left graph) and racial (right graph) lines.  
+% %
+% As before, the error bars represent the 99\% confidence interval calculated using Eq.~\ref{eq:single_99}.
+% %
+% We can immediately observe drastic differences in ad delivery across our ads along both racial and gender lines: our five ads for positions in the lumber industry deliver to over 90\% men and to over 70\% white users in aggregate, while our five ads for janitors deliver to over 65\% women and over 75\% black users in aggregate.
+% %
+% Recall that the only difference between these ads are the ad creative and destination link; we (the advertiser) used the same bidding strategy and target audience, and ran all ads at the same time.
+% %
+% %We provide a per-job-type breakdown of the same data in the bottom nine graphs of Figure~\ref{fig:image-job-race}, again plotting 99\% confidence intervals (note that the scales on these graphs are not consistent).
+% % Ali: Removing below since it is mentioned in limitations.
+% % It is important to note that we cannot make conclusions about how ads for different jobs are delivered {\em in general}, as we only have studied how our particular set of ads were delivered (\ie we do not claim that Facebook delivers {\em all} employment ads for lumberjacks primarily to white users).
+% %
+% % However, the fact that we observe significantly skewed delivery suggests that employment ads run by real-world employers are likely subject to skewed delivery as well.
+
+% Furthermore, we note that the skew in delivery cannot merely be explained by possibly different levels of competition from other advertisers for white and Black users or for male and female users. 
+% %
+% Although it is the case that each user may be targeted by a different number of advertisers with varying bid levels, by virtue of running all of our job ads at the same time, targeting the same users, with the same budget, we are ensuring that our ads are experiencing competition from other advertisers identically. 
+% %
+% In other words, our ad targeting asks that every user who is considered for our ``lumberjack'' job ad should also be considered for our taxi driver job ad, so these ads should be competing with each other and facing identical competition from other advertisers at auction time. 
+% %
+% If the content of the ad was not taken into account by the delivery optimization system, then the ads would be expected to have similar---though not necessarily even---breakdowns by race and gender at delivery. 
+% %
+% Our experiment demonstrates that this is not the case, and thus, aspects of ad delivery optimization, rather than merely advertiser competition, influence the skew in the delivery outcome. 
+
+% \begin{figure}[th]
+% 	\centering
+% 	\includegraphics[width=.8\linewidth]{figures/stock-housing-rerun.pdf}
+% 	\caption{Results for housing ads, showing a breakdown in the ad delivery audience by race.  Despite being targeted in the same manner, using the same bidding strategy, and being run at the same time, we observe significant skew in the makeup of the audience to whom the ad is delivered (ranging from estimated 27\% white users for luxury rental ads to 49\% for cheap house purchase ads).  }
+% 	\label{fig:image-housing-race}
+% \end{figure}
+
+% \para{Housing ads}
+% Finally, we create a suite of ads that advertise a variety of housing opportunities, as discrimination in online housing ads has recently been a source of concern~\cite{FacebookHUDLawsuit}.
+% %
+% We vary the type of property advertised (rental vs. purchase) and the implied cost (fixer-upper vs. luxury).
+% %, and the presence of a family in the ad image (just the house vs. a Black family vs. a white family). 
+% %
+% In each ad, the cost is implied through wording of the ad as well as the accompanying image.
+% %
+% Each ad points to a listing of houses for sale or rental apartments in North Carolina on a real-world housing site.
+% %
+% Simultaneously, we ran a baseline ad with generic (non-housing) text that simply links to \texttt{google.com}.
+% %
+% All of the ads ran for 12 hours, using the objective of Traffic, all targeting the same North Carolina audiences and using the same bidding strategy.
+% %
+% We construct the experiment such that each particular ad is run twice: once targeting audience $A$ and once targeting audience $B$ (see Table~\ref{stats:race})
+% %
+% This way we eliminate any potential geographical effects (for example, users in Wilmington could be interested in cheap houses to buy, and users in Charlotte could be interested in luxury rentals regardless of their ethnicity, but if we only used audience $C$ that effect could appear as racial skew).
+% %
+% % Further, to ensure comparably-sized audiences across both runs of our experiment, we downsample the white audience from the Wilmington and Raleigh-Durham region and the Black audience from the second region (as in Table \ref{stats:race}) to be of size 400,000.
+
+% We present the results in Figure~\ref{fig:image-housing-race} (we found little skew for the housing ads along gender lines, and we omit those results).
+% %
+% We observe significant ad delivery skew along racial lines in the delivery of our ads, with certain ads delivering to an audience of over 72\% Black users (comparable to the baseline results) while others delivering to an audience of as little as 51\% Black users.
+% %
+
+% As with the employment ads, we cannot make claims about what particular properties of our ads lead to this skew, or about how housing ads in general are delivered.
+% %
+% However, given the significant skew we observe with our suite of ads, it indicates the further study is needed to understand how real-world housing ads are delivered.
+
+% %
+% %We note that on average ads for houses on sale are more likely to be shown to white users (75\%) compared to rental ads (52\%).
+
+
+% % We run a series of ads pointing to \texttt{indeed.com}. All the ads have the same link, headline, and description, and they vary by image used in the ad.
+% % We generate pictures of faces that carry identifiable racial traits using the nVidia StyleGAN network~\cite{karras-2018-style}.
+
+% % \begin{figure}
+% % 	\centering
+% % 	\includegraphics[width=1\linewidth]{../plots/race-job-experiment.pdf}
+% % 	\caption{We run the same job campaing with eight different faces as the ad picture. The results don't sum to 1, because some ads were delivered outside of our targetted DMAs.}
+% % 	\label{fig:image-race-jobs}
+% % \end{figure}
+
+% % '\begin{table}[h!]
+% % 	\centering
+% % 	\begin{tabular}{ c  c | c  c  c  c | c }
+% % 	 & \rot{Reach} & \rot{\% white} & \rot{\% Black} & \rot{\% Hispanic} & \rot{\% Asian} & \rot{\% men} \\
+% % 	\cmidrule{1-7}
+% % 	\input{../plots/job_race_table}
+% % 	\cmidrule[1pt]{1-7}
+% % 	\end{tabular}
+% % 	\caption{Racial composition of the job ad audiences depending on the image used for the campaign.}
+% % 	\label{tab:job-race}
+% % \end{table}

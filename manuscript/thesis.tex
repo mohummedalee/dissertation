@@ -4,30 +4,65 @@
 %
 % The Current Maintainer of this work is Paul Vojta.
 
-\documentclass{ucbthesis}
-\usepackage[maxbibnames=99]{biblatex}
+\documentclass[oldfontcommands]{ucbthesis}
+\usepackage[
+backend=biber,
+style=numeric-comp,
+sorting=nyt,
+]{biblatex}
+\addbibresource{references.bib} % imports bibliography file
 \usepackage{rotating} % provides sidewaystable and sidewaysfigure
 
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{amsmath}
 \usepackage{amssymb}
-%\usepackage[backend=biber, bibencoding=utf8, style=authoryear]{biblatex}
-%\usepackage{biblatex}
 \usepackage[utf8]{inputenc}
 \usepackage{makecell}
 \usepackage{multirow}
 \usepackage{subcaption}
 
-\usepackage[dvipsnames]{xcolor}
+\newenvironment{packed_itemize}{
+\begin{itemize}
+  \setlength{\itemsep}{2pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+  \setlength{\topsep}{2pt}
+  \setlength{\itemindent}{0pt}
+}{\end{itemize}}
+\newenvironment{packed_enumerate}{
+\begin{enumerate}
+  \setlength{\itemsep}{2pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+  \setlength{\topsep}{2pt}
+  \setlength{\itemindent}{0pt}
+}{\end{enumerate}}
+
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+\newcommand{\todo}[1]{\textcolor{Bittersweet}{\textsc{todo}: #1}}
+\newcommand{\eg}{e.g.,\ }
+\newcommand{\etal}{et~al.\xspace}
+\newcommand{\ie}{i.e.,\ }
+\newcommand{\re}{r.e.\ }
+\newcommand{\aka}{a.k.a.\ }
+
+\usepackage{xspace}
+\usepackage[group-separator={,},per-mode=symbol]{siunitx}
+\usepackage{listings}
+\usepackage{array,amssymb,amsmath,graphicx,comment,multirow,microtype}
+\usepackage{booktabs,color,xspace,balance,csquotes}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{float}
+\restylefloat{table}
 
 % Colored hyperlinks
 \usepackage[linktocpage]{hyperref}
 \hypersetup{
     colorlinks=true,
     linkcolor=RoyalBlue,
-    filecolor=magenta,      
-    urlcolor=cyan,
+    citecolor=magenta,
+    urlcolor=Periwinkle,
 }
 
 % To compile this file, run "latex thesis", then "biber thesis"
@@ -43,8 +78,6 @@
 % \usepackage{indentfirst}
 
 \addtolength{\abovecaptionskip}{\baselineskip}
-
-% \newtheorem{theorem}{Jibberish}
 
 \newtheorem{definition}{Definition}[section]
 \newtheorem{problem}{Problem}[section]
@@ -74,16 +107,19 @@
   \printfield{titleaddon}}
 
 \renewcommand{\afterpartskip}{\vfil} % allows placing text on part page
+\newcommand{\parb}[1]{\vspace{0.05in}\noindent{\textbf{#1}}\quad}
+\newcommand{\parc}[1]{\vspace{0.05in}\noindent{\textbf{#1}}\;}
 
-\setcounter{secnumdepth}{3}
-
+\setcounter{secnumdepth}{4}
 
 \begin{document}
 
 % Declarations for Front Matter
 
-\title{Measuring the Harms of Personalization\\ through Advertising}
+\title{Measuring the Harms of Personalization \\through Advertising}
 \author{Muhammad Ali}
+% \prevdegrees{M.Sc. (Saarland University) 2018 \\
+%   B.S. (National University of Computer \& Emerging Sciences) 2015}
 \degreesemester{Fall}
 \degreeyear{2023}
 \degree{Doctor of Philosophy}
@@ -98,8 +134,7 @@
 % \cochairs{Professor Richard Francis Sony}{Professor Benedict Francis Pope}
 \numberofmembers{5}
 % Previous degrees are no longer to be listed on the title page.
-% \prevdegrees{B.A. (University of Northern South Dakota at Hoople) 1978 \\
-%   M.S. (Ed's School of Quantum Mechanics and Muffler Repair) 1989}
+
 \field{Computer Science}
 % Designated Emphasis -- this is optional, and rare
 % \emphasis{Colloidal Telemetry}
@@ -148,6 +183,8 @@
 
 \begin{acknowledgements}
 I have many people to thank.
+% I have felt the gentle, gracious hand of fortune push me in the right directions,
+% and for that I can only say Alhamdulillah.
 \end{acknowledgements}
 
 \end{frontmatter}
@@ -156,25 +193,28 @@ I have many people to thank.
 
 \part{Introduction and Background}
 \label{par:intro}
-% \include{chap1_intro}
-% \include{chap2_background}
+\include{introduction}
+\include{background_related_work}
 
-\part{Grasp Pose Detection}
-\label{par:algorithms}
+\part{Experimental Measurements}
+\label{par:experimental}
+\include{cscw/intro}
+\include{cscw/methods}
 % \include{chap3_handles}
 % \include{chap4_svm}
 % \include{chap5_cnn}
 % \include{chap6_cnn_candidates}
 
-\part{Applications}
-\label{par:applications}
-% \include{chap7}
+\part{Observational Measurements}
+\label{par:observational}
 % \include{chap8}
 
-\part{Conclusion}
+\part{Looking Forward}
 \label{par:conclusion}
-\include{chap9}
+% \include{chap9}
 
+% \bibliographystyle{acm}
+% \bibliography{references}
 \printbibliography
 
 %\appendix
